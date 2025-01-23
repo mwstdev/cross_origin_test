@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EC Site</title>
+</head>
+<body>
+    <h1>ECサイト</h1>
+
+    <!-- iframeでTVerページを埋め込む -->
+    <iframe src="http://localhost:4000/tver_page.html" width="600" height="400" id="tver-iframe"></iframe>
+
+    <!-- ボタンでiframe内のページにメッセージを送信 -->
+    <button id="send-message">iframe にメッセージ送信</button>
+
+    <!-- iframe から受け取ったメッセージを表示 -->
+    <p>iframeからのメッセージ: <span id="iframe-response">なし</span></p>
+
+    <script>
+        const iframe = document.getElementById('tver-iframe');
+        const sendMessageButton = document.getElementById('send-message');
+        const responseText = document.getElementById('iframe-response');
+
+        // ボタンクリックでiframeにメッセージを送信
+        sendMessageButton.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('ECサイトからのメッセージ', 'http://localhost:4000');
+        });
+
+        // iframe からのメッセージを受信
+        window.addEventListener('message', (event) => {
+            if (event.origin !== 'http://localhost:4000') return; // 安全のためオリジンを確認
+            console.log('iframeから受信:', event.data);
+            responseText.textContent = event.data;
+        });
+    </script>
+</body>
+</html>
+
